@@ -2,6 +2,7 @@ import { generatePin, generatePriv } from "./randomKeys";
 import { io } from "socket.io-client";
 import { AES, enc } from "crypto-js";
 import diffieHelman from "./diffieHelman";
+//import { compress, compressToUTF16, decompressFromUTF16 } from "lz-string";
 
 // html elements
 
@@ -49,11 +50,13 @@ document.querySelector('#rPin')?.addEventListener('input', event => {
     }
 })
 
-// interface HTMLInputEvent extends Event {
-//     target: HTMLInputElement & EventTarget;
-// }
+let received:string = ""
 
 let base64String:string=""
+
+function byteCount(s:string): number {
+    return encodeURI(s).split(/%..|./).length - 1;
+}
 
 
 document.querySelector('#file')?.addEventListener('change', event => {
@@ -71,18 +74,15 @@ document.querySelector('#file')?.addEventListener('change', event => {
 })
 
 document.querySelector('#fileSend')?.addEventListener('click', event => {
-    //const file =  (<HTMLInputElement>document.querySelector('#file'))['files']
-    //console.log(file?[0]:File)
-    // console.log(file)
-
-    //console.log(file?[0]:File)
+    let receiverPin = (<HTMLInputElement>document.getElementById("rPin")).value
+    
     async function encrypt() {
         const encMsg:string = await AES.encrypt(base64String, helmans).toString()
-        console.log(encMsg)
+        //podział na częśći
+        // byteCount() for()
         socket.emit('hello', [generatedPin, receiverPin, encMsg])
     }
 
-    let receiverPin = (<HTMLInputElement>document.getElementById("rPin")).value
     if(diffieDone) encrypt();
 })
 
@@ -105,25 +105,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 const dec:string = AES.decrypt(data.msg, helmans).toString(enc.Utf8)
                 if(dec.substring(0,5) === 'data:'){
                     if(dec.substring(5,10) === 'image'){
-                        var proImage= new Image();
-                        proImage.src = dec
-                        document.body.appendChild(proImage);
-                        //console.log('image');
+                            
+                            var proImage= new Image();
+                            proImage.src = dec
+                            document.body.appendChild(proImage);
+                            //console.log('image');
                     }
-                } 
-                else {
+                }
+                else{
                     const para = document.createElement('p')
                     const text = document.createTextNode(dec)
                     para.appendChild(text)
                     document.querySelector('#ctn')?.appendChild(para)
-                }
-                
+                } 
             }
-            
-            //console.log(data.msg)
         }
-        //console.log(data.msg.substring(0,4))
+            
+            
     })
+        
     
 
 });
