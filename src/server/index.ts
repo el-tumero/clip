@@ -11,7 +11,7 @@ const io = new Server(port, {
 io.on("connection", socket => {
     //const pin:string | string[] | undefined = socket.handshake.query.pin;
     socket.on('hello', data => {
-        console.log(data)
+        //console.log(data)
         io.emit(data[1], { sender: data[0], msg: data[2]})
     })
 })
