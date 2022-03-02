@@ -14,7 +14,7 @@ const status = document.querySelector('#status')
 
 // rest
 
-const tempIp = 'localhost'
+const tempIp = '192.168.0.111'
 
 const generatedPin:string = generatePin(5) // should omit pins which are in use at the moment
 
@@ -24,6 +24,7 @@ const priv = generatePriv() // priv key
 
 const socket = io('ws://' + tempIp + ":3333", {query: {pin: generatedPin}}) // socket connect
 
+// TO CHANGE
 const nHashed:string = "0x2dd3ca6fa7de9a07cda570c7e802450a7522c8296f73f8795cc7be468a01206373aefc4eae5b062293b3b7b9a2480d52152501a8d0b900f5562a42a3db8487ac" // should change every minute (server)
 const gen:number = 3 // should change every minute (server)
 
@@ -79,7 +80,6 @@ document.querySelector('#fileSend')?.addEventListener('click', event => {
     async function encrypt() {
         let size = 500000
         const encMsg:string = await AES.encrypt(base64String, helmans).toString()
-        //console.log(encMsg)
         for(let i=0; i<encMsg.length; i += size){
             let result = ':file' + encMsg.substring(i, i + size)
             socket.emit('hello', [generatedPin, receiverPin, result])
