@@ -2,7 +2,6 @@ import { generatePin, generatePriv } from "./randomKeys";
 import { io } from "socket.io-client";
 import { AES, enc } from "crypto-js";
 import diffieHelman from "./diffieHelman";
-//import { compress, compressToUTF16, decompressFromUTF16 } from "lz-string";
 
 // html elements
 
@@ -12,9 +11,10 @@ const status = document.querySelector('#status')
 
 
 
+
 // rest
 
-const tempIp = '192.168.0.75'
+const tempIp = 'localhost'
 
 const generatedPin:string = generatePin(5) // should omit pins which are in use at the moment
 
@@ -77,19 +77,26 @@ document.querySelector('#fileSend')?.addEventListener('click', event => {
     let receiverPin = (<HTMLInputElement>document.getElementById("rPin")).value
     
     async function encrypt() {
+        let size = 500000
         const encMsg:string = await AES.encrypt(base64String, helmans).toString()
-        //podział na częśći
-        // byteCount() for()
-        socket.emit('hello', [generatedPin, receiverPin, encMsg])
+        //console.log(encMsg)
+        for(let i=0; i<encMsg.length; i += size){
+            let result = ':file' + encMsg.substring(i, i + size)
+            socket.emit('hello', [generatedPin, receiverPin, result])
+        }
+        socket.emit('hello', [generatedPin, receiverPin, ':end'])
     }
 
-    if(diffieDone) encrypt();
+    if(diffieDone && base64String.length < 10000000) encrypt();
+    else {
+        console.error("File is bigger than 10MB!")
+    }
 })
 
 window.addEventListener('DOMContentLoaded', (event) => {
     
     socket.on(generatedPin, data => {
-        console.log(data)
+        //console.log(data) //helpful to debug
         if(data.msg[0] == 'd' && data.msg[1] == 'h'){
             if(!diffieDone){
                 diffieDone = true
@@ -102,22 +109,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         else {
             if(diffieDone){
-                const dec:string = AES.decrypt(data.msg, helmans).toString(enc.Utf8)
-                if(dec.substring(0,5) === 'data:'){
-                    if(dec.substring(5,10) === 'image'){
-                            
-                            var proImage= new Image();
-                            proImage.src = dec
-                            document.body.appendChild(proImage);
-                            //console.log('image');
-                    }
+                if(data.msg.substring(0,5) === ':file'){
+                    received += data.msg.substring(5)
                 }
-                else{
+                if(data.msg.substring(0,4) === ':end'){
+                    async function decrypt(){
+                        const dec:string = await AES.decrypt(received, helmans).toString(enc.Utf8)
+                        const date:string = new Date(Date.now()).toISOString()
+                        const splittedDate:Array<string> = date.split('T')
+                        var a = document.createElement("a");
+                        a.href = dec
+                        a.download = splittedDate[0] + "-" + splittedDate[1].substring(0,8); //File name Here
+                        a.click(); 
+                    }
+                    decrypt()
+                }
+                if(data.msg.substring(0,5) !== ':file' && data.msg.substring(0,4) !== ':end'){
+                    const dec:string = AES.decrypt(data.msg, helmans).toString(enc.Utf8)
                     const para = document.createElement('p')
                     const text = document.createTextNode(dec)
                     para.appendChild(text)
                     document.querySelector('#ctn')?.appendChild(para)
-                } 
+                }   
             }
         }
             
