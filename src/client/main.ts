@@ -14,7 +14,7 @@ const status = document.querySelector('#status')
 
 // rest
 
-const tempIp = '192.168.0.111'
+const tempIp = '34.88.252.135'
 
 const generatedPin:string = generatePin(5) // should omit pins which are in use at the moment
 
@@ -30,6 +30,7 @@ const gen:number = 3 // should change every minute (server)
 
 let helmans:string = ''
 let diffieDone:boolean = false
+let textReceived:boolean = false
 
 
 msgSend!.addEventListener('click', event => {
@@ -105,7 +106,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             helmans = diffieHelman(priv, nHashed, data.msg.substring(2))
             //console.log(helmans)
-            status!.textContent = 'Set! ' + helmans.substring(5,10) + '...'
+            status!.textContent = 'Connected! ' 
+            //+ helmans.substring(5,10) + '...'
         }
         else {
             if(diffieDone){
@@ -126,10 +128,33 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 }
                 if(data.msg.substring(0,5) !== ':file' && data.msg.substring(0,4) !== ':end'){
                     const dec:string = AES.decrypt(data.msg, helmans).toString(enc.Utf8)
-                    const para = document.createElement('p')
-                    const text = document.createTextNode(dec)
-                    para.appendChild(text)
-                    document.querySelector('#ctn')?.appendChild(para)
+
+                    if(!textReceived){
+                    document.querySelector('#receivedText')!.textContent = dec
+                    
+                    const btn = document.createElement('button')
+                    const text = document.createTextNode('Copy to clipboard!')
+                    btn.setAttribute('id', 'copyBtn');
+                    btn.appendChild(text)
+                    
+                    document.querySelector('#receivedCtn')?.appendChild(btn)
+                    textReceived = true
+                    }
+                    document.querySelector('#copyBtn')?.addEventListener('click', event => {
+                        navigator.clipboard.writeText(dec).then(res => {
+                            console.log('Copied!')
+                        })
+                    })
+                      
+                    
+                    //navigator.clipboard.writeText(dec)
+                    // console.log(dec)
+                    //const receivedText = document.querySelector('#recivedText')
+                    //receivedText!.textContent = dec 
+                    // const para = document.createElement('p')
+                    // const text = document.createTextNode(dec)
+                    // para.appendChild(text)
+                    // document.querySelector('#ctn')?.appendChild(para)
                 }   
             }
         }
