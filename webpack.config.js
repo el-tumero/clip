@@ -19,7 +19,7 @@ const frontConfig = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/client'),
   },
 }
 
@@ -41,7 +41,7 @@ const backConfig = {
   },
   output: {
     filename: '[name].js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist/server'),
   },
   externals: {
     bufferutil: "bufferutil",
