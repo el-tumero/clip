@@ -271,7 +271,7 @@ eval("\nconst os = __webpack_require__(/*! os */ \"os\");\nconst tty = __webpack
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst socket_io_1 = __webpack_require__(/*! socket.io */ \"./node_modules/socket.io/dist/index.js\");\nconst port = 3333;\nconst io = new socket_io_1.Server(port, {\n    cors: {\n        origin: \"*\"\n    }\n});\nio.on(\"connection\", socket => {\n    //const pin:string | string[] | undefined = socket.handshake.query.pin;\n    socket.on('hello', data => {\n        //console.log(data)\n        io.emit(data[1], { sender: data[0], msg: data[2] });\n    });\n});\nconsole.log('Server listening at port ' + port);\n\n\n//# sourceURL=webpack://typescript-template/./src/server/index.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nconst socket_io_1 = __webpack_require__(/*! socket.io */ \"./node_modules/socket.io/dist/index.js\");\nconst port = 3333;\nconst io = new socket_io_1.Server(port, {\n    cors: {\n        origin: \"*\"\n    }\n});\nio.on(\"connection\", socket => {\n    //const pin:string | string[] | undefined = socket.handshake.query.pin;\n    socket.on('hello', data => {\n        //console.log(data)\n        io.emit(data[1], { sender: data[0], msg: data[2] });\n    });\n});\nconsole.log('Server (socket.io) listening at port ' + port);\n\n\n//# sourceURL=webpack://typescript-template/./src/server/index.ts?");
 
 /***/ }),
 
