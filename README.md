@@ -1,5 +1,5 @@
 # onClipboard
 
-...
+server side
 
 
