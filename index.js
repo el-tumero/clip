@@ -1,8 +1,9 @@
 // express server for serving static files
+require('dotenv').config()
 
 const express = require('express')
 const app = express()
-const port = 3000
+const port = process.env.PORT
 const path = require('path')
 //app.get('/', (req, res) => {
 //  res.send('Hello World!')
