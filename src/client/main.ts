@@ -14,7 +14,7 @@ const status = document.querySelector('#status')
 
 // rest
 
-const tempIp = '34.88.252.135'
+const addr = 'onclipboard.herokuapp.com/'
 
 const generatedPin:string = generatePin(5) // should omit pins which are in use at the moment
 
@@ -22,7 +22,7 @@ _pin!.textContent = generatedPin // pub key
 
 const priv = generatePriv() // priv key
 
-const socket = io('ws://' + tempIp + ":3333", {query: {pin: generatedPin}}) // socket connect
+const socket = io('ws://' + addr, {query: {pin: generatedPin}}) // socket connect
 
 // TO CHANGE
 const nHashed:string = "0x2dd3ca6fa7de9a07cda570c7e802450a7522c8296f73f8795cc7be468a01206373aefc4eae5b062293b3b7b9a2480d52152501a8d0b900f5562a42a3db8487ac" // should change every minute (server)
