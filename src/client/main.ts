@@ -129,6 +129,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 if(data.msg.substring(0,5) !== ':file' && data.msg.substring(0,4) !== ':end'){
                     const dec:string = AES.decrypt(data.msg, helmans).toString(enc.Utf8)
 
+                    if(textReceived){
+                        document.querySelector('#receivedText')!.textContent = dec
+                    }
+
                     if(!textReceived){
                     document.querySelector('#receivedText')!.textContent = dec
                     

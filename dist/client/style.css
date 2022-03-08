@@ -90,6 +90,11 @@ p {
     border: 0;    
 }
 
+#msgSend:hover{
+    background-color: rgb(184, 184, 184);
+}
+
+
 #file {
     display: none;
 }
@@ -131,6 +136,10 @@ p {
     border: 0;   
 }
 
+#fileSend:hover{
+    background-color: rgb(184, 184, 184);
+}
+
 #receivedCtn{
     align-items: center;
     /* background-color: blue; */
@@ -146,6 +155,10 @@ p {
     height: 40px;
     border-radius: 10px;
     border: 0
+}
+
+#copyBtn:hover{
+    background-color: rgb(184, 184, 184);
 }
 
 #receivedText{
