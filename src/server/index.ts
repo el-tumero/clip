@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 
-const port:number = 3333
+const port:number | undefined = Number(process.env.PORT)
 
 const io = new Server(port, {
     cors: {
